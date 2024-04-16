@@ -1,0 +1,23 @@
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches:
+      - main  # Ajusta esto según tu flujo de trabajo de desarrollo
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Kubernetes context
+      run: |
+        mkdir -p $HOME/.kube
+        echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+        kubectl version  # Esto es para verificar que kubectl está configurado correctamente
+
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl apply -f ./ymal/  # Asegúrate de que tus manifiestos están en el directorio `ymal/`
