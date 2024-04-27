@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main  # Ajusta esto según tu flujo de trabajo de desarrollo
+    paths:
+      - 'ymal/**'
 
 jobs:
   deploy:
