@@ -5,7 +5,7 @@ on:
     branches:
       - main  # Ajusta el nombre de la rama si es diferente
     paths:
-      - 'dockerfile/**'
+      - 'dockerfille/**'
 
 jobs:
   build-and-push:
