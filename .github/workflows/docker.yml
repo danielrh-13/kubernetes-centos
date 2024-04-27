@@ -20,9 +20,9 @@ jobs:
 
     - name: Build and push Docker images
       run: |
-        for df in ./dockerfile/*; do
+        for df in ./dockerfille/*; do
           image_name="${df##*/}"  # Extrae el nombre base del archivo, p.ej., Dockerfile.node -> node
-          image_name="${image_name##Dockerfile.}"  # Asume que el nombre empieza con Dockerfile.
+          image_name="${image_name##Dockerfille.}"  # Asume que el nombre empieza con Dockerfile.
           docker build -t ${{ secrets.DOCKER_USER }}/${image_name}:latest -f $df .
           docker push ${{ secrets.DOCKER_USER }}/${image_name}:latest
         done
