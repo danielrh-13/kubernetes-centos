@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+
+    environment {
+        // Establece el PATH para asegurarte de que Jenkins puede encontrar kubectl y otros binarios necesarios
+        PATH = "/usr/local/bin:/usr/bin:$PATH"
+    }
+
+    stages {
+        // Etapa para verificar la instalación y versión de kubectl
+        stage('Verify kubectl') {
+            steps {
+                script {
+                    sh "kubectl version --client"
+                }
+            }
+        }
+
+        // Etapa para listar archivos y verificar la ubicación 
+        stage('List Files') {
+            steps {
+                script {
+                    sh "ls -la"  // Asegúrate de que esto muestre los archivos
+                }
+            }
+        }
+
+        // Etapa para imprimir el PATH actual; útil para depuración si hay problemas en encontrar binarios
+        stage('Print PATH') {
+            steps {
+                script {
+                    sh "echo $PATH"
+                }
+            }
+        }
+
+        // Etapa final para desplegar el pod usando kubectl y el archivo YAML
+        stage('Deploy billing App') {
+         steps {
+            withCredentials(bindings: [
+                      string(credentialsId: 'c480e4b9-b2bd-480c-8295-5fba723dd8a6', variable: 'api_token')
+                      ]) {
+            sh 'kubectl --token $api_token --server https://0.tcp.ngrok.io:10748 --insecure-skip-tls-verify=true get ns '
+          }
+
+        }
+      }
+
+      stage('Deploy pods App') {
+         steps {
+            withCredentials(bindings: [
+                      string(credentialsId: 'c480e4b9-b2bd-480c-8295-5fba723dd8a6', variable: 'api_token')
+                      ]) {
+            sh "kubectl --token $api_token --server https://0.tcp.ngrok.io:10748 --insecure-skip-tls-verify=true apply -f nginx.yaml"
+          }
+
+        }
+      }
+
+    }
+}
