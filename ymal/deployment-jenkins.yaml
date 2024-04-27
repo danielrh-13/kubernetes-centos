@@ -20,7 +20,7 @@ spec:
       containers:
         - name: jenkins
           # Asegúrate de actualizar esta línea con el nombre correcto de tu imagen y etiqueta
-          image: 931024/jenkins-kubernetes:tagname
+          image: 931024/jenkins-kubernetes:latest
           resources:
             limits:
               memory: "2Gi"
