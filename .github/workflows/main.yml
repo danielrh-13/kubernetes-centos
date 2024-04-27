@@ -23,3 +23,13 @@ jobs:
     - name: Deploy to Kubernetes
       run: |
         kubectl apply -f ./ymal/  # Asegúrate de que tus manifiestos están en el directorio `ymal/`
+
+    - name: Clean up deleted Kubernetes resources
+      run: |
+        git fetch origin ${{ github.event.before }}
+        git diff --name-only --diff-filter=D ${{ github.event.before }} ${{ github.sha }} -- yml/ > deleted_files.txt
+        cat deleted_files.txt | while read file; do
+          git show ${{ github.event.before }}:$file > temp.yaml  # Recupera el archivo del estado anterior
+          kubectl delete -f temp.yaml --ignore-not-found  # Usa el archivo temporal para eliminar el recurso
+          rm temp.yaml  # Elimina el archivo temporal
+        done
